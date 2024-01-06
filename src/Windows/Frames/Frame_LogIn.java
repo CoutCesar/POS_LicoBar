@@ -1,6 +1,6 @@
 package Windows.Frames;
 import Controllers.Control_Configuracion;
-import Controllers.Control_RecursosHumanos;
+import Controllers.Control_Empleado;
 import Controllers.Control_Validacion;
 import Models.ConfiguracionUsuario;
 import Models.Empleado;
@@ -334,16 +334,18 @@ import javax.swing.border.LineBorder;
 
         Contrasena = txt_Contrasena.getText();
 
-        Control_RecursosHumanos control = new Control_RecursosHumanos();
+        //Control_RecursosHumanos control = new Control_RecursosHumanos();
+        Control_Empleado controlempleado = new Control_Empleado();
         Control_Configuracion controlconfiguracion = new Control_Configuracion();
         
-        boolean Acceso = control.IniciarSesion(ID, Contrasena);
+        boolean Acceso = controlempleado.IniciarSesion(ID, Contrasena);
 
         if (Acceso == true) 
         {
             ConfiguracionUsuario configuracionusuario = new ConfiguracionUsuario();
-            configuracionusuario = controlconfiguracion.CargarConfiguracion(ID);
-            Empleado empleado = control.CargarUsuario(ID);
+            configuracionusuario = controlconfiguracion.cargarConfiguracion(ID);
+            
+            Empleado empleado = controlempleado.CargarUsuario(ID);
                         
             Frame_MenuInicio form = new Frame_MenuInicio(empleado, configuracionusuario);
             form.setVisible(true);
@@ -361,7 +363,7 @@ import javax.swing.border.LineBorder;
         Control_Validacion controlvalidacion = new Control_Validacion();
         String Texto = txt_Id.getText();
 
-        boolean Error = controlvalidacion.TextFieldEntero(Texto);
+        boolean Error = controlvalidacion.validarEntradaEntera(Texto);
         if (Error == true)
         {
             LineBorder BordeError = new LineBorder(Color.RED);

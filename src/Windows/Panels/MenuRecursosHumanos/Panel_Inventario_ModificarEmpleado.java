@@ -2,11 +2,11 @@ package Windows.Panels.MenuRecursosHumanos;
 
 import Controllers.Control_Configuracion;
 import Controllers.Control_Empleado;
-import Controllers.Control_Sonidos;
+import Controllers.Control_Sonido;
 import Controllers.Control_Validacion;
 import Models.ConfiguracionUsuario;
 import Models.Empleado;
-import Windows.Dialogs.MenuInventario.Dialog_Inventario_ModificarProducto;
+import Models.Tema;
 import Windows.Dialogs.MenuRecursosHumanos.Dialog_Recursos_ModificarEmpleado;
 import java.awt.Color;
 import javax.swing.DefaultListModel;
@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.ComboBoxUI;
 
 
 /**
@@ -45,23 +46,28 @@ public class Panel_Inventario_ModificarEmpleado extends javax.swing.JPanel
     //Carga el tema en el panel
     public void AplicarTema(ConfiguracionUsuario configuracionusuario)
     {
-        jPanel1.setFocusCycleRoot(true);
         Control_Configuracion controlconfiguracion = new Control_Configuracion();
-        int Tema = configuracionusuario.getTema();
+        Tema tema = new Tema();
+        
+        int IdTema = configuracionusuario.getTema();
+        tema = controlconfiguracion.cargarTema(IdTema);
 
-        Color Color1 = controlconfiguracion.ObtenerColor1(Tema);
-        Color Color2 = controlconfiguracion.ObtenerColor2(Tema);
-        Color Color3 = controlconfiguracion.ObtenerColor3(Tema);
-        Color Color4 = controlconfiguracion.ObtenerColor4(Tema);
+        Color Color1 = Color.decode(tema.getColor1());
+        Color Color2 = Color.decode(tema.getColor2());
+        Color Color3 = Color.decode(tema.getColor3());
+        Color Color4 = Color.decode(tema.getColor4());
+        Color Color5 = Color.decode(tema.getColor5());
+        
         Color arrowColor = Color3;
         Color selectedColor = Color2;
         
+        jPanel1.setFocusCycleRoot(true);
         this.setBackground(Color2);
         
         btn_Cancelar.setBackground(Color2);
         btn_Cancelar.setForeground(Color1);
         
-        btn_Modificar.setBackground(Color4);
+        btn_Modificar.setBackground(Color5);
         btn_Modificar.setForeground(Color1);
         
         jLabel1.setForeground(Color1);
@@ -89,11 +95,13 @@ public class Panel_Inventario_ModificarEmpleado extends javax.swing.JPanel
         
         jPanel1.setBackground(Color2);
         
-        Control_Configuracion.Propiedades customUI = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
+        //Control_Configuracion.Propiedades customUI = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
+        ComboBoxUI customUI = controlconfiguracion.createCustomComboBoxUI(Color3, Color2);
         cmb_Tipo.setUI(customUI);
         cmb_Tipo.setForeground(Color1);
         
-        Control_Configuracion.Propiedades customUI2 = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
+        //Control_Configuracion.Propiedades customUI2 = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
+        ComboBoxUI customUI2 = controlconfiguracion.createCustomComboBoxUI(Color3, Color2);
         cmb_Puesto.setUI(customUI2);
         cmb_Puesto.setForeground(Color1);
         
@@ -119,7 +127,7 @@ public class Panel_Inventario_ModificarEmpleado extends javax.swing.JPanel
     public void CargarResultado(int ID)
     {
         Control_Empleado controlempleado = new Control_Empleado();
-        Empleado empleado = controlempleado.CargarEmpleado(ID);
+        Empleado empleado = controlempleado.cargarEmpleado(ID);
         
         txt_Nombre.setVisible(true);
         txt_Codigo.setVisible(true);
@@ -334,7 +342,7 @@ public class Panel_Inventario_ModificarEmpleado extends javax.swing.JPanel
                     {
                         Control_Empleado controlproducto = new Control_Empleado();
                         System.out.println("Se supone que si jala");
-                        return controlproducto.ConsultaNombreMod(Nombre);
+                        return controlproducto.consultaConNombre(Nombre);
                     }
 
                     @Override
@@ -389,7 +397,7 @@ public class Panel_Inventario_ModificarEmpleado extends javax.swing.JPanel
                         protected DefaultListModel<String> doInBackground() throws Exception 
                         {
                             Control_Empleado controlempleado = new Control_Empleado();
-                            return controlempleado.ConsultaIdMod(Codigo);
+                            return controlempleado.consultaConID(Codigo);
                         }
 
                         @Override
@@ -469,7 +477,7 @@ public class Panel_Inventario_ModificarEmpleado extends javax.swing.JPanel
         Control_Validacion controlvalidacion = new Control_Validacion();
         String Texto = txt_Codigo.getText();
 
-        boolean Error = controlvalidacion.TextFieldEntero(Texto);
+        boolean Error = controlvalidacion.validarEntradaEntera(Texto);
         if (Error == true)
         {
             LineBorder BordeError = new LineBorder(Color.RED);
@@ -486,8 +494,8 @@ public class Panel_Inventario_ModificarEmpleado extends javax.swing.JPanel
 
     //Ejecuta el codigo para la modificacion
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
-        Control_Sonidos controlsonido = new Control_Sonidos();
-        controlsonido.ReproducirError1();
+        Control_Sonido controlsonido = new Control_Sonido();
+        controlsonido.reproducirSonidoError1();
         
         int confirmacion = JOptionPane.showConfirmDialog(null, "¿Estás seguro de modificar el producto?", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
@@ -506,7 +514,7 @@ public class Panel_Inventario_ModificarEmpleado extends javax.swing.JPanel
                 empleado.setNombre_Empleado(txt_Nombre.getText());
                 empleado.setPuesto(cmb_Puesto.getSelectedIndex());
 
-                controlempleado.ModificarEmpleado(empleado, ID);
+                controlempleado.modificarEmpleado(empleado, ID);
 
                 //Codigo para limpiar los componentes
                 txt_Codigo.setText("");
@@ -531,7 +539,7 @@ public class Panel_Inventario_ModificarEmpleado extends javax.swing.JPanel
 
             catch (NumberFormatException e) 
             {
-                controlsonido.ReproducirError1();
+                controlsonido.reproducirSonidoError1();
                 JOptionPane.showMessageDialog(null, "Error, siga las instrucciones", "Error", JOptionPane.ERROR_MESSAGE);   
             }
         } 

@@ -2,9 +2,9 @@ package Windows.Panels.MenuInventario;
 
 import Controllers.Control_Configuracion;
 import Controllers.Control_Producto;
-import Controllers.Control_Sonidos;
+import Controllers.Control_Sonido;
 import Models.ConfiguracionUsuario;
-import Models.Producto;
+import Models.Tema;
 import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +13,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.border.Border;
+import javax.swing.plaf.ComboBoxUI;
 
 /**
  *
@@ -29,46 +30,51 @@ public class Panel_Inventario_EliminarProducto extends javax.swing.JPanel {
     public void AplicarTemas(ConfiguracionUsuario configuracionusuario)
     {
         Control_Configuracion controlconfiguracion = new Control_Configuracion();
-        int Tema = configuracionusuario.getTema();
+        Tema tema = new Tema();
+        
+        int IdTema = configuracionusuario.getTema();
+        tema = controlconfiguracion.cargarTema(IdTema);
 
-        Color Color1 = controlconfiguracion.ObtenerColor1(Tema);
-        Color Color2 = controlconfiguracion.ObtenerColor2(Tema);
-        Color Color3 = controlconfiguracion.ObtenerColor3(Tema);
-        Color Color4 = controlconfiguracion.ObtenerColor4(Tema);
-        Color arrowColor = Color3;
-        Color selectedColor = Color2;
+        Color color1 = Color.decode(tema.getColor1());
+        Color color2 = Color.decode(tema.getColor2());
+        Color color3 = Color.decode(tema.getColor3());
+        Color color5 = Color.decode(tema.getColor5());
         
-        this.setBackground(Color2);
+        lbl_Tipo.setForeground(color1);
+        lbl_Titulo.setForeground(color1);
+        lbl_Busqueda.setForeground(color1);
         
-        btn_Cancelar.setBackground(Color2);
-        btn_Cancelar.setForeground(Color1);
+        txt_Busqueda.setCaretColor(color1);
+        txt_Busqueda.setForeground(color1);
         
-        btn_Eliminar.setBackground(Color4);
-        btn_Eliminar.setForeground(Color1);
+        btn_Eliminar.setForeground(color1);
+        btn_Cancelar.setForeground(color1);
         
-        Border border = BorderFactory.createLineBorder(Color.white, 1); // 2 es el grosor del borde
-        Control_Configuracion.Propiedades customUI = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
-        cmb_Tipo.setUI(customUI);
-        cmb_Tipo.setForeground(Color1);
+        cmb_Tipo.setForeground(color1);
+        lista_Resultados.setForeground(color1);
         
-        jLabel1.setForeground(Color1);
-        lbl_Busqueda.setForeground(Color1);
-        lbl_Titulo.setForeground(Color1);
+        this.setBackground(color2);
+        SubPanel.setBackground(color2);
+        cmb_Tipo.setBackground(color2);
+        txt_Busqueda.setBackground(color2);
+        btn_Cancelar.setBackground(color2);
+        lista_Resultados.setBackground(color2);        
         
-        txt_Busqueda.setCaretColor(Color1);
+        txt_Busqueda.setSelectionColor(color3);
+        lista_Resultados.setSelectionBackground(color3);
         
-        SubPanel.setBackground(Color2);
-        
-        txt_Busqueda.setBackground(Color2);
-        txt_Busqueda.setForeground(Color1);
-
-        lista_Resultados.setBackground(Color2);
-        lista_Resultados.setForeground(Color1);
+        btn_Eliminar.setBackground(color5);
         
         btn_Eliminar.setVisible(false);
         
         DefaultListModel model = new DefaultListModel();
         lista_Resultados.setModel(model);
+        
+        Border border = BorderFactory.createLineBorder(Color.white, 1); // 2 es el grosor del borde
+        //Control_Configuracion.Propiedades customUI = new Control_Configuracion.Propiedades(color3, color2);
+        ComboBoxUI customUI = controlconfiguracion.createCustomComboBoxUI(color3, color2);
+        cmb_Tipo.setUI(customUI);
+        cmb_Tipo.setForeground(color1);
     }
     
     
@@ -89,7 +95,7 @@ public class Panel_Inventario_EliminarProducto extends javax.swing.JPanel {
         jTable2 = new javax.swing.JTable();
         SubPanel = new javax.swing.JPanel();
         lbl_Titulo = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        lbl_Tipo = new javax.swing.JLabel();
         cmb_Tipo = new javax.swing.JComboBox<>();
         lbl_Busqueda = new javax.swing.JLabel();
         txt_Busqueda = new javax.swing.JTextField();
@@ -125,7 +131,6 @@ public class Panel_Inventario_EliminarProducto extends javax.swing.JPanel {
         jScrollPane2.setViewportView(jTable2);
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setMinimumSize(new java.awt.Dimension(10, 10));
         setPreferredSize(new java.awt.Dimension(480, 295));
         setLayout(new java.awt.GridBagLayout());
 
@@ -135,7 +140,7 @@ public class Panel_Inventario_EliminarProducto extends javax.swing.JPanel {
         lbl_Titulo.setForeground(new java.awt.Color(0, 3, 24));
         lbl_Titulo.setText("Eliminar Producto");
 
-        jLabel1.setText("Tipo de busqueda");
+        lbl_Tipo.setText("Tipo de busqueda");
 
         cmb_Tipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Buscar con codigo", "Buscar con nombre" }));
         cmb_Tipo.addItemListener(new java.awt.event.ItemListener() {
@@ -188,13 +193,12 @@ public class Panel_Inventario_EliminarProducto extends javax.swing.JPanel {
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, SubPanelLayout.createSequentialGroup()
                         .addGroup(SubPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
+                            .addComponent(lbl_Tipo)
                             .addComponent(cmb_Tipo, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(SubPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(SubPanelLayout.createSequentialGroup()
                                 .addGap(14, 14, 14)
-                                .addComponent(lbl_Busqueda)
-                                .addGap(193, 195, Short.MAX_VALUE))
+                                .addComponent(lbl_Busqueda))
                             .addGroup(SubPanelLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txt_Busqueda))))
@@ -212,7 +216,7 @@ public class Panel_Inventario_EliminarProducto extends javax.swing.JPanel {
                 .addComponent(lbl_Titulo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(SubPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(lbl_Tipo)
                     .addComponent(lbl_Busqueda))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(SubPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -261,7 +265,7 @@ public class Panel_Inventario_EliminarProducto extends javax.swing.JPanel {
                     {
                         Control_Producto controlproducto = new Control_Producto();
                         System.out.println("Se supone que si jala");
-                        return controlproducto.ConsultaNombreMod(Nombre);
+                        return controlproducto.consultaConNombre(Nombre);
                     }
 
                     @Override
@@ -306,7 +310,7 @@ public class Panel_Inventario_EliminarProducto extends javax.swing.JPanel {
                         protected DefaultListModel<String> doInBackground() throws Exception 
                         {
                             Control_Producto controlproducto = new Control_Producto();
-                            return controlproducto.ConsultaCodigoMod(Codigo);
+                            return controlproducto.consultaConCodigo(Codigo);
                         }
 
                         @Override
@@ -376,15 +380,15 @@ public class Panel_Inventario_EliminarProducto extends javax.swing.JPanel {
         // Extraer el nombre del elemento seleccionado
         String Nombre = selectedItem.substring(0, startIndex - 15); // Restar 15 para eliminar " (ID Producto: X)" del nombre
 
-        Control_Sonidos controlsonido = new Control_Sonidos();
-        controlsonido.ReproducirError1();
+        Control_Sonido controlsonido = new Control_Sonido();
+        controlsonido.reproducirSonidoError1();
         
         int confirmacion = JOptionPane.showConfirmDialog(this, "¿Estás seguro de eliminar el producto " + Nombre + "?", "Confirmación de Eliminación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
         if (confirmacion == JOptionPane.YES_OPTION) 
         {
             Control_Producto controlproducto = new Control_Producto();
-            controlproducto.EliminarProducto(ID);
+            controlproducto.eliminarProducto(ID);
             
             DefaultListModel model = new DefaultListModel();
             lista_Resultados.setModel(model);
@@ -398,13 +402,13 @@ public class Panel_Inventario_EliminarProducto extends javax.swing.JPanel {
     private javax.swing.JButton btn_Cancelar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JComboBox<String> cmb_Tipo;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JLabel lbl_Busqueda;
+    private javax.swing.JLabel lbl_Tipo;
     private javax.swing.JLabel lbl_Titulo;
     private javax.swing.JList<String> lista_Resultados;
     private javax.swing.JTextField txt_Busqueda;

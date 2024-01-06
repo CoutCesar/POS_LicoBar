@@ -1,12 +1,12 @@
 package Windows.Panels.MenuInventario;
 
 import Controllers.Control_Configuracion;
-import Controllers.Control_Configuracion.Propiedades;
-import Controllers.Control_Empleado;
 import Controllers.Control_Producto;
 import Models.ConfiguracionUsuario;
+import Models.Tema;
 import java.awt.Color;
 import javax.swing.SwingWorker;
+import javax.swing.plaf.ComboBoxUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -19,45 +19,49 @@ public class Panel_Inventario_ConsultarProducto extends javax.swing.JPanel {
     public Panel_Inventario_ConsultarProducto(ConfiguracionUsuario configuracionusuario) 
     {
         initComponents();
-        AplicarTema(configuracionusuario);
+        aplicarTema(configuracionusuario);
         CargarTabla();
     }
 
     //Aplica el tema al panel
-    public void AplicarTema(ConfiguracionUsuario configuracionusuario)
+    public void aplicarTema(ConfiguracionUsuario configuracionusuario)
     {
         Control_Configuracion controlconfiguracion = new Control_Configuracion();
-        int Tema = configuracionusuario.getTema();
-
-        Color Color1 = controlconfiguracion.ObtenerColor1(Tema);
-        Color Color2 = controlconfiguracion.ObtenerColor2(Tema);
-        Color Color3 = controlconfiguracion.ObtenerColor3(Tema);
-        Color arrowColor = Color3;
-        Color selectedColor = Color2;
+        Tema tema = new Tema();
         
-        this.setBackground(Color2);
+        int IdTema = configuracionusuario.getTema();
+        tema = controlconfiguracion.cargarTema(IdTema);
 
-        lbl_Busqueda.setForeground(Color1);
-        lbl_TipoBusqueda.setForeground(Color1);
-        lbl_Titulo.setForeground(Color1);
+        Color color1 = Color.decode(tema.getColor1());
+        Color color2 = Color.decode(tema.getColor2());
+        Color color3 = Color.decode(tema.getColor3());
+
+        lbl_Titulo.setForeground(color1);
+        lbl_Busqueda.setForeground(color1);
+        lbl_TipoBusqueda.setForeground(color1);
         
-        txt_Busqueda.setCaretColor(Color1);
+        txt_Busqueda.setCaretColor(color1);
+        txt_Busqueda.setForeground(color1);
+        
+        cmb_Tipo.setForeground(color1);
+        
+        this.setBackground(color2);
+        SubPanel.setBackground(color2);
+        cmb_Tipo.setBackground(color2);
+        txt_Busqueda.setBackground(color2);
+        tabla_Busqueda.setBackground(color2);
+        
+        txt_Busqueda.setSelectionColor(color3);
+        tabla_Busqueda.setSelectionBackground(color3);
 
-        cmb_Tipo.setForeground(Color1);
-        txt_Busqueda.setForeground(Color1);
-
-        cmb_Tipo.setBackground(Color2);
-        SubPanel.setBackground(Color2);
-        tabla_Busqueda.setBackground(Color2);
-        txt_Busqueda.setBackground(Color2);
-
-        Propiedades customUI = new Propiedades(arrowColor, selectedColor);
+        //Propiedades customUI = new Propiedades(color3, color2);
+        ComboBoxUI customUI = controlconfiguracion.createCustomComboBoxUI(color3, color2);
         cmb_Tipo.setUI(customUI);
         
-        tabla_Busqueda.setForeground(Color1);
+        tabla_Busqueda.setForeground(color1);
         JTableHeader header = tabla_Busqueda.getTableHeader();
-        header.setBackground(Color3); 
-        header.setForeground(Color1);
+        header.setBackground(color3); 
+        header.setForeground(color1);
         header.repaint(); 
     }
 
@@ -67,7 +71,7 @@ public class Panel_Inventario_ConsultarProducto extends javax.swing.JPanel {
         Control_Producto controlproducto = new Control_Producto();
         DefaultTableModel model = new DefaultTableModel();
         
-        model = controlproducto.CargarDatosProducto();
+        model = controlproducto.cargarProductos();
         tabla_Busqueda.setModel(model);
     }
     
@@ -75,6 +79,7 @@ public class Panel_Inventario_ConsultarProducto extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         SubPanel = new javax.swing.JPanel();
         lbl_Titulo = new javax.swing.JLabel();
@@ -86,7 +91,6 @@ public class Panel_Inventario_ConsultarProducto extends javax.swing.JPanel {
         tabla_Busqueda = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setMinimumSize(new java.awt.Dimension(10, 10));
         setPreferredSize(new java.awt.Dimension(470, 400));
         setLayout(new java.awt.GridBagLayout());
 
@@ -168,7 +172,12 @@ public class Panel_Inventario_ConsultarProducto extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        add(SubPanel, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 6);
+        add(SubPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     
@@ -187,7 +196,7 @@ public class Panel_Inventario_ConsultarProducto extends javax.swing.JPanel {
                     {
                         Control_Producto controlproducto = new Control_Producto();
                         DefaultTableModel model = new DefaultTableModel();
-                        return controlproducto.ConsultaCodigo(Codigo);
+                        return controlproducto.busquedaConCodigo(Codigo);
                     }
 
                     @Override
@@ -206,7 +215,7 @@ public class Panel_Inventario_ConsultarProducto extends javax.swing.JPanel {
             } catch (NumberFormatException e) 
             {
                 Control_Producto controlproducto = new Control_Producto();
-                tabla_Busqueda.setModel(controlproducto.CargarDatosProducto());
+                tabla_Busqueda.setModel(controlproducto.cargarProductos());
             }
         } 
         
@@ -221,7 +230,7 @@ public class Panel_Inventario_ConsultarProducto extends javax.swing.JPanel {
                 {
                     Control_Producto controlproducto = new Control_Producto();
                     DefaultTableModel model = new DefaultTableModel();
-                    return controlproducto.ConsultaNombre(Nombre);
+                    return controlproducto.busquedaConNombre(Nombre);
                 }
 
                 @Override

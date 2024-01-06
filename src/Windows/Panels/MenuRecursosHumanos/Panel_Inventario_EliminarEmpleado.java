@@ -2,8 +2,9 @@ package Windows.Panels.MenuRecursosHumanos;
 
 import Controllers.Control_Configuracion;
 import Controllers.Control_Empleado;
-import Controllers.Control_Sonidos;
+import Controllers.Control_Sonido;
 import Models.ConfiguracionUsuario;
+import Models.Tema;
 import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +13,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.border.Border;
+import javax.swing.plaf.ComboBoxUI;
 
 /**
  *
@@ -31,12 +33,17 @@ public class Panel_Inventario_EliminarEmpleado extends javax.swing.JPanel
     public void AplicarTemas(ConfiguracionUsuario configuracionusuario)
     {
         Control_Configuracion controlconfiguracion = new Control_Configuracion();
-        int Tema = configuracionusuario.getTema();
+        Tema tema = new Tema();
+        
+        int IdTema = configuracionusuario.getTema();
+        tema = controlconfiguracion.cargarTema(IdTema);
 
-        Color Color1 = controlconfiguracion.ObtenerColor1(Tema);
-        Color Color2 = controlconfiguracion.ObtenerColor2(Tema);
-        Color Color3 = controlconfiguracion.ObtenerColor3(Tema);
-        Color Color4 = controlconfiguracion.ObtenerColor4(Tema);
+        Color Color1 = Color.decode(tema.getColor1());
+        Color Color2 = Color.decode(tema.getColor2());
+        Color Color3 = Color.decode(tema.getColor3());
+        Color Color4 = Color.decode(tema.getColor4());
+        Color Color5 = Color.decode(tema.getColor5());
+        
         Color arrowColor = Color3;
         Color selectedColor = Color2;
         
@@ -46,7 +53,8 @@ public class Panel_Inventario_EliminarEmpleado extends javax.swing.JPanel
         btn_Cancelar.setForeground(Color1);
         
         Border border = BorderFactory.createLineBorder(Color.white, 1); // 2 es el grosor del borde
-        Control_Configuracion.Propiedades customUI = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
+        //Control_Configuracion.Propiedades customUI = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
+        ComboBoxUI customUI = controlconfiguracion.createCustomComboBoxUI(Color3, Color2);
         cmb_Tipo.setUI(customUI);
         cmb_Tipo.setForeground(Color1);
         
@@ -68,7 +76,7 @@ public class Panel_Inventario_EliminarEmpleado extends javax.swing.JPanel
         lista_Resultados.setModel(model);
         
         btn_Eliminar.setVisible(false);
-        btn_Eliminar.setBackground(Color4);
+        btn_Eliminar.setBackground(Color5);
         btn_Eliminar.setForeground(Color1);
     }
     
@@ -265,7 +273,7 @@ public class Panel_Inventario_EliminarEmpleado extends javax.swing.JPanel
                     protected DefaultListModel<String> doInBackground() throws Exception 
                     {
                         Control_Empleado controlempleado = new Control_Empleado();
-                        return controlempleado.ConsultaNombreMod(Nombre);
+                        return controlempleado.consultaConNombre(Nombre);
                     }
 
                     @Override
@@ -310,7 +318,7 @@ public class Panel_Inventario_EliminarEmpleado extends javax.swing.JPanel
                         protected DefaultListModel<String> doInBackground() throws Exception 
                         {
                             Control_Empleado controlempleado = new Control_Empleado();
-                            return controlempleado.ConsultaIdMod(Codigo);
+                            return controlempleado.consultaConID(Codigo);
                         }
 
                         @Override
@@ -384,15 +392,15 @@ public class Panel_Inventario_EliminarEmpleado extends javax.swing.JPanel
         // Extraer el nombre del elemento seleccionado
         String Nombre = selectedItem.substring(0, startIndex - 15); // Restar 15 para eliminar " (ID Producto: X)" del nombre
 
-        Control_Sonidos controlsonido = new Control_Sonidos();
-        controlsonido.ReproducirError1();
+        Control_Sonido controlsonido = new Control_Sonido();
+        controlsonido.reproducirSonidoError1();
         
         int confirmacion = JOptionPane.showConfirmDialog(this, "¿Estás seguro de eliminar el Empelado " + Nombre + "?", "Confirmación de Eliminación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
         if (confirmacion == JOptionPane.YES_OPTION) 
         {
             Control_Empleado controlempleado = new Control_Empleado();
-            controlempleado.EliminarEmpleado(ID);
+            controlempleado.eliminarEmpleado(ID);
             
             DefaultListModel model = new DefaultListModel();
             lista_Resultados.setModel(model);

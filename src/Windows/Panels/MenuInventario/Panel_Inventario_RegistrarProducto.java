@@ -2,15 +2,14 @@ package Windows.Panels.MenuInventario;
 
 import Controllers.Control_Configuracion;
 import Controllers.Control_Producto;
-import Controllers.Control_Sonidos;
+import Controllers.Control_Sonido;
 import Controllers.Control_Validacion;
 import Models.ConfiguracionUsuario;
 import Models.Producto;
+import Models.Tema;
 import Windows.Dialogs.MenuInventario.Dialog_Inventario_RegistrarProducto;
 import java.awt.Color;
-import java.awt.GridBagConstraints;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 
@@ -41,46 +40,56 @@ public class Panel_Inventario_RegistrarProducto extends javax.swing.JPanel
     public void AplicarTema(ConfiguracionUsuario configuracionusuario)
     {
         Control_Configuracion controlconfiguracion = new Control_Configuracion();
-        int Tema = configuracionusuario.getTema();
+        Tema tema = new Tema();
         
-        Color Color1 = controlconfiguracion.ObtenerColor1(Tema);
-        Color Color2 = controlconfiguracion.ObtenerColor2(Tema);
-        Color Color3 = controlconfiguracion.ObtenerColor3(Tema);
+        int IdTema = configuracionusuario.getTema();
+        tema = controlconfiguracion.cargarTema(IdTema);
+
+        Color Color1 = Color.decode(tema.getColor1());
+        Color Color2 = Color.decode(tema.getColor2());
+        Color Color3 = Color.decode(tema.getColor3());
         
-        this.setBackground(Color2);
+        Color arrowColor = Color3;
+        Color selectedColor = Color2;
         
-        lbl_Codigo.setForeground(Color1);
-        lbl_Costo.setForeground(Color1);
-        lbl_Nombre.setForeground(Color1);
         lbl_Titulo.setForeground(Color1);
+        lbl_Costo.setForeground(Color1);
         lbl_Venta.setForeground(Color1);
+        lbl_Codigo.setForeground(Color1);
+        lbl_Nombre.setForeground(Color1);
         
-        txt_Nombre.setCaretColor(Color1);
-        txt_Codigo.setCaretColor(Color1);
-        txt_Costo.setCaretColor(Color1);
         txt_Venta.setCaretColor(Color1);
+        txt_Costo.setCaretColor(Color1);
+        txt_Codigo.setCaretColor(Color1);
+        txt_Nombre.setCaretColor(Color1);
         
         btn_Cancelar.setForeground(Color1);
         btn_Registrar.setForeground(Color1);
         
-        txt_Codigo.setForeground(Color1);
-        txt_Costo.setForeground(Color1);
-        txt_Nombre.setForeground(Color1);
         txt_Venta.setForeground(Color1);
+        txt_Costo.setForeground(Color1);
+        txt_Codigo.setForeground(Color1);
+        txt_Nombre.setForeground(Color1);
         
+        this.setBackground(Color2);
         SubPanel2.setBackground(Color2);
-        
-        txt_Codigo.setBackground(Color2);
-        txt_Costo.setBackground(Color2);
-        txt_Nombre.setBackground(Color2);
-        txt_Venta.setBackground(Color2);
-        
         btn_Cancelar.setBackground(Color2);
+        
+        txt_Costo.setBackground(Color2);
+        txt_Venta.setBackground(Color2);
+        txt_Codigo.setBackground(Color2);
+        txt_Nombre.setBackground(Color2);
+        
         btn_Registrar.setBackground(Color3);
         
-        lbl_ErrorCodigo.setVisible(false);
+        txt_Costo.setSelectionColor(Color3);
+        txt_Venta.setSelectionColor(Color3);
+        txt_Codigo.setSelectionColor(Color3);
+        txt_Nombre.setSelectionColor(Color3);
+        
         lbl_ErrorVenta.setVisible(false);
         lbl_ErrorCosto.setVisible(false);
+        lbl_ErrorCodigo.setVisible(false);
     }
     
     
@@ -106,7 +115,6 @@ public class Panel_Inventario_RegistrarProducto extends javax.swing.JPanel
         lbl_ErrorVenta = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(460, 390));
-        setMinimumSize(new java.awt.Dimension(10, 10));
         setPreferredSize(new java.awt.Dimension(460, 390));
         setLayout(new java.awt.GridBagLayout());
 
@@ -264,7 +272,7 @@ public class Panel_Inventario_RegistrarProducto extends javax.swing.JPanel
             producto.setNombre_Producto(Nombre_Producto);
             producto.setCosto(Costo);
             producto.setCostoVenta(Venta);
-            controlproducto.NuevoProducto(producto);
+            controlproducto.crearProducto(producto);
             
             txt_Nombre.setText("");
             txt_Codigo.setText("");
@@ -273,8 +281,8 @@ public class Panel_Inventario_RegistrarProducto extends javax.swing.JPanel
             
         } catch (NumberFormatException e) 
         {    
-            Control_Sonidos controlsonido = new Control_Sonidos();
-            controlsonido.ReproducirError1();
+            Control_Sonido controlsonido = new Control_Sonido();
+            controlsonido.reproducirSonidoError1();
             JOptionPane.showMessageDialog(null, "Error, siga las instrucciones", "Error", JOptionPane.ERROR_MESSAGE);   
         }
     }//GEN-LAST:event_btn_RegistrarActionPerformed
@@ -284,7 +292,7 @@ public class Panel_Inventario_RegistrarProducto extends javax.swing.JPanel
         Control_Validacion controlvalidacion = new Control_Validacion();
         String Texto = txt_Codigo.getText();
 
-        boolean Error = controlvalidacion.TextFieldEntero(Texto);
+        boolean Error = controlvalidacion.validarEntradaEntera(Texto);
         if (Error == true)
         {
             LineBorder BordeError = new LineBorder(Color.RED);
@@ -304,7 +312,7 @@ public class Panel_Inventario_RegistrarProducto extends javax.swing.JPanel
         Control_Validacion controlvalidacion = new Control_Validacion();
         String Texto = txt_Costo.getText();
 
-        boolean Error = controlvalidacion.TextFieldFloat(Texto);
+        boolean Error = controlvalidacion.validarEntradaFloat(Texto);
         if (Error == true)
         {
             LineBorder BordeError = new LineBorder(Color.RED);
@@ -324,7 +332,7 @@ public class Panel_Inventario_RegistrarProducto extends javax.swing.JPanel
         Control_Validacion controlvalidacion = new Control_Validacion();
         String Texto = txt_Venta.getText();
 
-        boolean Error = controlvalidacion.TextFieldFloat(Texto);
+        boolean Error = controlvalidacion.validarEntradaFloat(Texto);
         if (Error == true)
         {
             LineBorder BordeError = new LineBorder(Color.RED);

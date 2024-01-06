@@ -51,3 +51,15 @@ create table ConfiguracionUsuario
     
     foreign key (ID_Empleado) references Empleado(ID_Empleado)
 );
+
+CREATE TABLE Tema (
+    ID_Tema INTEGER PRIMARY KEY AUTOINCREMENT,
+    Nombre VARCHAR(30) UNIQUE,
+    Color1 VARCHAR(6),
+    Color2 VARCHAR(6),
+    Color3 VARCHAR(6),
+    Color4 VARCHAR(6),
+    Color5 VARCHAR(6)
+);
+
+

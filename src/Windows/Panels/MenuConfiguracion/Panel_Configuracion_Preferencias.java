@@ -1,12 +1,14 @@
+//Este Codigo ya fue Optimizado
 package Windows.Panels.MenuConfiguracion;
 
 import Controllers.Control_Configuracion;
 import Models.ConfiguracionUsuario;
 import Models.Empleado;
+import Models.Tema;
 import Windows.Dialogs.MenuConfiguracion.Dialog_Configuracion_Preferencias;
 import java.awt.Color;
-import javax.swing.BorderFactory;
-import javax.swing.border.Border;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.plaf.ComboBoxUI;
 
 /**
  *
@@ -14,11 +16,10 @@ import javax.swing.border.Border;
  */
 public class Panel_Configuracion_Preferencias extends javax.swing.JPanel 
 {
-    
     private Empleado empleado;
     private Dialog_Configuracion_Preferencias dialog;
-
-    public Panel_Configuracion_Preferencias(ConfiguracionUsuario configuracionusuario, Empleado usuario, Dialog_Configuracion_Preferencias dialog) 
+    
+    public Panel_Configuracion_Preferencias(ConfiguracionUsuario configuracionUsuario, Empleado usuario, Dialog_Configuracion_Preferencias dialog) 
     {
         initComponents();
         btn_Aplicar.requestFocusInWindow();
@@ -26,12 +27,20 @@ public class Panel_Configuracion_Preferencias extends javax.swing.JPanel
         empleado = usuario;
         this.dialog = dialog;
         
-        ConfiguracionElegida(configuracionusuario);
-        AplicarTema(configuracionusuario, empleado);
+        Control_Configuracion controlConfiguracion = new Control_Configuracion();
+        DefaultComboBoxModel model;
+        model = controlConfiguracion.cargarTemas();
+        cmb_Tema.setModel(model);
+        
+        ConfiguracionElegida(configuracionUsuario);
+        aplicarTema(configuracionUsuario, empleado);
     }
     
     
-    public int ObtenerComponente(String Eleccion)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Metodo que le asigna un numero a cada funcion del programa para poder ser gurdada facilmente en el registro
+    //de Configuracion en la Base de Datos
+    public int codificarComponente(String Eleccion)
     {
         int Componente = 0;
         switch (Eleccion)
@@ -45,61 +54,69 @@ public class Panel_Configuracion_Preferencias extends javax.swing.JPanel
             case "Consultar Empleado": Componente = 6; break;
             case "Modificar Empleado": Componente = 7; break;
             case "Eliminar Empleado": Componente = 8; break;
+            
+            case "Ganancias": Componente = 9; break;
+            case "Rendimiento de Productos": Componente = 10; break;
+            
+            case "Informacion de Usuario": Componente = 11; break;
         }
-        
         return Componente;
     }
     
     
-    public void AplicarTema(ConfiguracionUsuario configuracionusuario, Empleado empleado)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Metodo que Aplica el Tema a la Interfaz
+    public void aplicarTema(ConfiguracionUsuario configuracionUsuario, Empleado empleado)
     {
-        Control_Configuracion controlconfiguracion = new Control_Configuracion();
-        int Tema = configuracionusuario.getTema();
+        Control_Configuracion controlConfiguracion = new Control_Configuracion();
+        Tema tema;
         
-        Color Color1 = controlconfiguracion.ObtenerColor1(Tema);
-        Color Color2 = controlconfiguracion.ObtenerColor2(Tema);
-        Color Color3 = controlconfiguracion.ObtenerColor3(Tema);
-        Color Color4 = controlconfiguracion.ObtenerColor4(Tema);
+        int IdTema = configuracionUsuario.getTema();
+        tema = controlConfiguracion.cargarTema(IdTema);
+
+        Color color1 = Color.decode(tema.getColor1());
+        Color color2 = Color.decode(tema.getColor2());
+        Color color3 = Color.decode(tema.getColor3());
+        Color color5 = Color.decode(tema.getColor5());
         
-        Color arrowColor = Color3;
-        Color selectedColor = Color2;
+        lbl_Dos.setForeground(color1);
+        lbl_Uno.setForeground(color1);
+        lbl_Tipos.setForeground(color1);
+        lbl_Tema.setForeground(color1);
+        lbl_Intefaz.setForeground(color1);
+        lbl_Componentes.setForeground(color1);
         
-        this.setBackground(Color2);
-        panel_Interfaz.setBackground(Color2);
+        btn_Aplicar.setForeground(color1);
+        btn_Restablecer.setForeground(color1);
         
-        btn_Aplicar.setBackground(Color3);
-        btn_Aplicar.setForeground(Color1);
+        btn_Aplicar.setBackground(color3);
+        panel_Interfaz.setBackground(color2);
         
-        btn_Restablecer.setBackground(Color4);
-        btn_Restablecer.setForeground(Color1);
+        this.setBackground(color2);
         
-        lbl_Componentes.setForeground(Color1);
-        lbl_Dos.setForeground(Color1);
-        lbl_Intefaz.setForeground(Color1);
-        lbl_Tema.setForeground(Color1);
-        lbl_Tipos.setForeground(Color1);
-        lbl_Uno.setForeground(Color1);
+        btn_Restablecer.setBackground(color5);
         
-        Border border = BorderFactory.createLineBorder(Color.white, 1); // 2 es el grosor del borde
         
-        Control_Configuracion.Propiedades customUI = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
+        ComboBoxUI customUI = controlConfiguracion.createCustomComboBoxUI(color3, color2);
         cmb_Tipo.setUI(customUI);
-        cmb_Tipo.setForeground(Color1);
+        cmb_Tipo.setForeground(color1);
         
-        Control_Configuracion.Propiedades customUI2 = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
+        ComboBoxUI customUI2 = controlConfiguracion.createCustomComboBoxUI(color3, color2);
         cmb_Tema.setUI(customUI2);
-        cmb_Tema.setForeground(Color1);
+        cmb_Tema.setForeground(color1);
         
-        Control_Configuracion.Propiedades customUI3 = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
+        ComboBoxUI customUI3 = controlConfiguracion.createCustomComboBoxUI(color3, color2);
         cmb_Uno.setUI(customUI3);
-        cmb_Uno.setForeground(Color1);
+        cmb_Uno.setForeground(color1);
         
-        Control_Configuracion.Propiedades customUI4 = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
+        ComboBoxUI customUI4 = controlConfiguracion.createCustomComboBoxUI(color3, color2);
         cmb_Dos.setUI(customUI4);
-        cmb_Dos.setForeground(Color1);
+        cmb_Dos.setForeground(color1);
     }
     
     
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Metodo que Asigna los parametros anteriormente elegidos a los componentes para elegir la Configuracion
     public void ConfiguracionElegida(ConfiguracionUsuario configuracionusuario)
     {
         int Tema = configuracionusuario.getTema();
@@ -155,12 +172,7 @@ public class Panel_Configuracion_Preferencias extends javax.swing.JPanel
 
         lbl_Tema.setText("Tema");
 
-        cmb_Tema.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Claro", "Obscuro", "Moderno Obscuro" }));
-        cmb_Tema.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmb_TemaItemStateChanged(evt);
-            }
-        });
+        cmb_Tema.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Claro", "Obscuro", "Moderno", "Carmesi" }));
 
         lbl_Tipos.setText("Tipo de interfaz");
 
@@ -170,11 +182,11 @@ public class Panel_Configuracion_Preferencias extends javax.swing.JPanel
 
         lbl_Uno.setText("1");
 
-        cmb_Uno.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Registrar Producto", "Consultar Producto", "Modificar Producto", "Eliminar Producto", "Registrar Empleado", "Consultar Empleado", "Modificar Empleado", "Eliminar Empleado" }));
+        cmb_Uno.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Registrar Producto", "Consultar Producto", "Modificar Producto", "Eliminar Producto", "Registrar Empleado", "Consultar Empleado", "Modificar Empleado", "Eliminar Empleado", "Ganancias", "Rendimiento de Productos", "Informacion de Usuario" }));
 
         lbl_Dos.setText("2");
 
-        cmb_Dos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Registrar Producto", "Consultar Producto", "Modificar Producto", "Eliminar Producto", "Registrar Empleado", "Consultar Empleado", "Modificar Empleado", "Eliminar Empleado" }));
+        cmb_Dos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Registrar Producto", "Consultar Producto", "Modificar Producto", "Eliminar Producto", "Registrar Empleado", "Consultar Empleado", "Modificar Empleado", "Eliminar Empleado", "Ganancias", "Rendimiento de Productos", "Informacion de Usuario" }));
 
         btn_Restablecer.setBackground(new java.awt.Color(255, 51, 51));
         btn_Restablecer.setForeground(new java.awt.Color(255, 255, 255));
@@ -240,40 +252,35 @@ public class Panel_Configuracion_Preferencias extends javax.swing.JPanel
         add(panel_Interfaz, new java.awt.GridBagConstraints());
     }// </editor-fold>//GEN-END:initComponents
 
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Evento que ejecuta el Cambio de Configuracion
     private void btn_AplicarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AplicarActionPerformed
-        //Obtiene los datos de las configuraciones elegidas
-        int Tema = cmb_Tema.getSelectedIndex();
-        String Eleccion1 = cmb_Uno.getSelectedItem().toString();
-        String Eleccion2 = cmb_Dos.getSelectedItem().toString();
-        int ID_Empleado = empleado.getID_Empleado();
+        String nombreTema = cmb_Tema.getSelectedItem().toString();
+        String eleccion1 = cmb_Uno.getSelectedItem().toString();
+        String eleccion2 = cmb_Dos.getSelectedItem().toString();
+        
+        Control_Configuracion controlConfiguracion = new Control_Configuracion();
+        int tema = controlConfiguracion.consultarIdTema(nombreTema);
+        int idEmpleado = empleado.getID_Empleado();
         
         //Crea el objeto de la configuracion
-        ConfiguracionUsuario configuracionusuario = new ConfiguracionUsuario();
+        ConfiguracionUsuario configuracionUsuario = new ConfiguracionUsuario();
         
         //Se agregan los datos de la configuracion al onjeto
-        configuracionusuario.setComponente1(ObtenerComponente(Eleccion1));
-        configuracionusuario.setComponente2(ObtenerComponente(Eleccion2));
-        configuracionusuario.setTema(Tema);
-        configuracionusuario.setIDUsuario(ID_Empleado);
-        
-        System.out.println("Va bien");
+        configuracionUsuario.setComponente1(codificarComponente(eleccion1));
+        configuracionUsuario.setComponente2(codificarComponente(eleccion2));
+        configuracionUsuario.setTema(tema);
+        configuracionUsuario.setIDUsuario(idEmpleado);
         
         //Se crea el objeto controlconfiguracion y se ejecuta el metodo para insertar la configuracion a la BD
-        Control_Configuracion controlconfiguracion = new Control_Configuracion();
-        controlconfiguracion.NuevaConfiguracion(configuracionusuario);
+        controlConfiguracion.nuevaConfiguracion(configuracionUsuario);
         
-        //Aqui quiero que se llame al metodo para cerrar el dialog
-        dialog.ReiniciarIntefaz(empleado, configuracionusuario);
+        //Ahora se llama al metodo que Reinicia la Interfaz
+        dialog.ReiniciarIntefaz(empleado, configuracionUsuario);
     }//GEN-LAST:event_btn_AplicarActionPerformed
 
-    private void cmb_TemaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_TemaItemStateChanged
-        String Eleccion = cmb_Tema.getSelectedItem().toString();
-        int Numero = cmb_Tema.getSelectedIndex();
-        
-        System.out.println("El tema " + Eleccion + "Es el numero " + Numero);
-    }//GEN-LAST:event_cmb_TemaItemStateChanged
-
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Aplicar;
     private javax.swing.JButton btn_Restablecer;

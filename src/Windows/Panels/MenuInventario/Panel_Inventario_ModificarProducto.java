@@ -2,10 +2,11 @@ package Windows.Panels.MenuInventario;
 
 import Controllers.Control_Configuracion;
 import Controllers.Control_Producto;
-import Controllers.Control_Sonidos;
+import Controllers.Control_Sonido;
 import Controllers.Control_Validacion;
 import Models.ConfiguracionUsuario;
 import Models.Producto;
+import Models.Tema;
 import Windows.Dialogs.MenuInventario.Dialog_Inventario_ModificarProducto;
 import java.awt.Color;
 import javax.swing.DefaultListModel;
@@ -14,6 +15,7 @@ import javax.swing.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.ComboBoxUI;
 
 
 /**
@@ -44,62 +46,73 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
     //Carga el tema en el panel
     public void AplicarTema(ConfiguracionUsuario configuracionusuario)
     {
-        jPanel1.setFocusCycleRoot(true);
         Control_Configuracion controlconfiguracion = new Control_Configuracion();
-        int Tema = configuracionusuario.getTema();
+        Tema tema = new Tema();
+        
+        int IdTema = configuracionusuario.getTema();
+        tema = controlconfiguracion.cargarTema(IdTema);
 
-        Color Color1 = controlconfiguracion.ObtenerColor1(Tema);
-        Color Color2 = controlconfiguracion.ObtenerColor2(Tema);
-        Color Color3 = controlconfiguracion.ObtenerColor3(Tema);
-        Color Color4 = controlconfiguracion.ObtenerColor4(Tema);
-        Color arrowColor = Color3;
-        Color selectedColor = Color2;
+        Color color1 = Color.decode(tema.getColor1());
+        Color color2 = Color.decode(tema.getColor2());
+        Color color3 = Color.decode(tema.getColor3());
+        Color color5 = Color.decode(tema.getColor5());
+
+        //jPanel1.setFocusCycleRoot(true);
+
+        lbl_Tipo.setForeground(color1);
+        lbl_Titulo.setForeground(color1);
+        lbl_Costo.setForeground(color1);
+        lbl_Venta.setForeground(color1);
+        lbl_Codigo.setForeground(color1);
+        lbl_Nombre.setForeground(color1);
+        lbl_Busqueda.setForeground(color1);
         
-        this.setBackground(Color2);
+        txt_Costo.setForeground(color1);
+        txt_Precio.setForeground(color1);
+        txt_Codigo.setForeground(color1);
+        txt_Nombre.setForeground(color1);
+        txt_Busqueda.setForeground(color1);
         
-        btn_Cancelar.setBackground(Color2);
-        btn_Cancelar.setForeground(Color1);
+        txt_Costo.setCaretColor(color1);
+        txt_Precio.setCaretColor(color1);
+        txt_Codigo.setCaretColor(color1);
+        txt_Nombre.setCaretColor(color1);
+        txt_Busqueda.setCaretColor(color1);
         
-        btn_Modificar.setBackground(Color4);
-        btn_Modificar.setForeground(Color1);
+        btn_Modificar.setForeground(color1);
+        btn_Cancelar.setForeground(color1);
         
-        jLabel1.setForeground(Color1);
-        lbl_Busqueda.setForeground(Color1);
-        lbl_Codigo.setForeground(Color1);
-        lbl_Costo.setForeground(Color1);
-        lbl_Nombre.setForeground(Color1);
-        lbl_Titulo.setForeground(Color1);
-        lbl_Venta.setForeground(Color1);
+        cmb_Tipo.setForeground(color1);
+        lista_Resultados.setForeground(color1);
         
-        txt_Busqueda.setCaretColor(Color1);
-        txt_Codigo.setCaretColor(Color1);
-        txt_Costo.setCaretColor(Color1);
-        txt_Nombre.setCaretColor(Color1);
-        txt_Venta.setCaretColor(Color1);
+        this.setBackground(color2);
         
-        txt_Codigo.setBackground(Color2);
-        txt_Codigo.setForeground(Color1);
+        txt_Costo.setBackground(color2);
+        txt_Precio.setBackground(color2);
+        txt_Codigo.setBackground(color2);
+        txt_Nombre.setBackground(color2);
+        txt_Busqueda.setBackground(color2);
         
-        txt_Costo.setBackground(Color2);
-        txt_Costo.setForeground(Color1);
-                
-        txt_Nombre.setBackground(Color2);
-        txt_Nombre.setForeground(Color1);
+        cmb_Tipo.setBackground(color2);
+        btn_Cancelar.setBackground(color2);
+        panel_Modificar.setBackground(color2);
+        lista_Resultados.setBackground(color2);
         
-        txt_Venta.setBackground(Color2);
-        txt_Venta.setForeground(Color1);
+        txt_Costo.setSelectionColor(color3);
+        txt_Precio.setSelectionColor(color3);
+        txt_Codigo.setSelectionColor(color3);
+        txt_Nombre.setSelectionColor(color3);
+        txt_Busqueda.setSelectionColor(color3);
         
-        txt_Busqueda.setBackground(Color2);
-        txt_Busqueda.setForeground(Color1);
+        lista_Resultados.setSelectionBackground(color3);
         
-        lista_Resultados.setBackground(Color2);
-        lista_Resultados.setForeground(Color1);
+        btn_Modificar.setBackground(color5);
         
-        jPanel1.setBackground(Color2);
-        
-        Control_Configuracion.Propiedades customUI = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
+
+        //Control_Configuracion.Propiedades customUI = new Control_Configuracion.Propiedades(color3, color2);
+        ComboBoxUI customUI = controlconfiguracion.createCustomComboBoxUI(color3, color2);
         cmb_Tipo.setUI(customUI);
-        cmb_Tipo.setForeground(Color1);
+        cmb_Tipo.setForeground(color1);
         
         lbl_ErrorCodigo.setVisible(false);
         lbl_ErrorVenta.setVisible(false);
@@ -107,8 +120,8 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
         
         txt_Nombre.setVisible(false);
         txt_Codigo.setVisible(false);
+        txt_Precio.setVisible(false);
         txt_Costo.setVisible(false);
-        txt_Venta.setVisible(false);
 
         lbl_Nombre.setVisible(false);
         lbl_Codigo.setVisible(false);
@@ -126,12 +139,12 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
     public void CargarResultado(int ID)
     {
         Control_Producto controlproducto = new Control_Producto();
-        Producto producto = controlproducto.CargarProducto(ID);
+        Producto producto = controlproducto.cargarProducto(ID);
         
         txt_Nombre.setVisible(true);
         txt_Codigo.setVisible(true);
+        txt_Precio.setVisible(true);
         txt_Costo.setVisible(true);
-        txt_Venta.setVisible(true);
         
         lbl_Nombre.setVisible(true);
         lbl_Codigo.setVisible(true);
@@ -142,8 +155,8 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
         
         txt_Nombre.setText(producto.getNombre_Producto());
         txt_Codigo.setText(String.valueOf(producto.getID_Producto()));
-        txt_Costo.setText(String.valueOf(producto.getCosto()));
-        txt_Venta.setText(String.valueOf(producto.getCostoVenta()));
+        txt_Precio.setText(String.valueOf(producto.getCosto()));
+        txt_Costo.setText(String.valueOf(producto.getCostoVenta()));
     }
     
 
@@ -152,9 +165,9 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel1 = new javax.swing.JPanel();
+        panel_Modificar = new javax.swing.JPanel();
         lbl_Titulo = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        lbl_Tipo = new javax.swing.JLabel();
         cmb_Tipo = new javax.swing.JComboBox<>();
         lbl_Busqueda = new javax.swing.JLabel();
         txt_Busqueda = new javax.swing.JTextField();
@@ -163,9 +176,9 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
         lbl_Codigo = new javax.swing.JLabel();
         txt_Codigo = new javax.swing.JTextField();
         lbl_Costo = new javax.swing.JLabel();
-        txt_Costo = new javax.swing.JTextField();
+        txt_Precio = new javax.swing.JTextField();
         lbl_Venta = new javax.swing.JLabel();
-        txt_Venta = new javax.swing.JTextField();
+        txt_Costo = new javax.swing.JTextField();
         btn_Modificar = new javax.swing.JButton();
         btn_Cancelar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -175,17 +188,16 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
         lbl_ErrorCosto = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setMinimumSize(new java.awt.Dimension(10, 10));
         setPreferredSize(new java.awt.Dimension(398, 533));
         setLayout(new java.awt.GridBagLayout());
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        panel_Modificar.setBackground(new java.awt.Color(204, 204, 204));
 
         lbl_Titulo.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         lbl_Titulo.setForeground(new java.awt.Color(0, 3, 24));
         lbl_Titulo.setText("Modificar un producto");
 
-        jLabel1.setText("Tipo de busqueda");
+        lbl_Tipo.setText("Tipo de busqueda");
 
         cmb_Tipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Buscar con codigo", "Buscar con nombre" }));
         cmb_Tipo.addItemListener(new java.awt.event.ItemListener() {
@@ -204,6 +216,7 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
 
         lbl_Nombre.setText("Nombre");
 
+        lbl_Codigo.setForeground(new java.awt.Color(0, 0, 0));
         lbl_Codigo.setText("Codigo del producto");
 
         txt_Codigo.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -212,19 +225,21 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
             }
         });
 
-        lbl_Costo.setText("Costo del producto");
+        lbl_Costo.setForeground(new java.awt.Color(0, 0, 0));
+        lbl_Costo.setText("Precio del producto");
+
+        txt_Precio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_PrecioKeyReleased(evt);
+            }
+        });
+
+        lbl_Venta.setForeground(new java.awt.Color(0, 0, 0));
+        lbl_Venta.setText("Costo del producto");
 
         txt_Costo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_CostoKeyReleased(evt);
-            }
-        });
-
-        lbl_Venta.setText("Costo de venta");
-
-        txt_Venta.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txt_VentaKeyReleased(evt);
             }
         });
 
@@ -268,49 +283,49 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
         lbl_ErrorCosto.setForeground(java.awt.Color.red);
         lbl_ErrorCosto.setText("Solo ingrese numeros");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout panel_ModificarLayout = new javax.swing.GroupLayout(panel_Modificar);
+        panel_Modificar.setLayout(panel_ModificarLayout);
+        panel_ModificarLayout.setHorizontalGroup(
+            panel_ModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_ModificarLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(panel_ModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_ModificarLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btn_Cancelar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btn_Modificar))
                     .addComponent(txt_Busqueda)
                     .addComponent(jScrollPane1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_ModificarLayout.createSequentialGroup()
+                        .addGroup(panel_ModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_Busqueda)
                             .addComponent(cmb_Tipo, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_Titulo)
-                            .addComponent(jLabel1)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_Tipo)
+                            .addGroup(panel_ModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_ModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbl_Nombre)
                                     .addComponent(txt_Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(txt_Codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lbl_Codigo)
                                 .addComponent(lbl_ErrorCodigo)
                                 .addComponent(lbl_Venta)
-                                .addComponent(txt_Venta, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_Costo, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lbl_ErrorVenta)
                                 .addComponent(lbl_Costo)
-                                .addComponent(txt_Costo, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_Precio, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lbl_ErrorCosto)))
                         .addGap(0, 196, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panel_ModificarLayout.setVerticalGroup(
+            panel_ModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_ModificarLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lbl_Titulo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
+                .addComponent(lbl_Tipo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmb_Tipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -332,17 +347,17 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_Venta)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txt_Venta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_Costo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_ErrorVenta)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_Costo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txt_Costo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_Precio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_ErrorCosto)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panel_ModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_Modificar)
                     .addComponent(btn_Cancelar))
                 .addContainerGap())
@@ -354,7 +369,7 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
         gridBagConstraints.ipadx = 196;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 6);
-        add(jPanel1, gridBagConstraints);
+        add(panel_Modificar, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     
@@ -377,7 +392,7 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
                     {
                         Control_Producto controlproducto = new Control_Producto();
                         System.out.println("Se supone que si jala");
-                        return controlproducto.ConsultaNombreMod(Nombre);
+                        return controlproducto.consultaConNombre(Nombre);
                     }
 
                     @Override
@@ -405,8 +420,8 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
                 
                 txt_Nombre.setVisible(false);
                 txt_Codigo.setVisible(false);
+                txt_Precio.setVisible(false);
                 txt_Costo.setVisible(false);
-                txt_Venta.setVisible(false);
                 
                 lbl_Nombre.setVisible(false);
                 lbl_Codigo.setVisible(false);
@@ -437,7 +452,7 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
                         protected DefaultListModel<String> doInBackground() throws Exception 
                         {
                             Control_Producto controlproducto = new Control_Producto();
-                            return controlproducto.ConsultaCodigoMod(Codigo);
+                            return controlproducto.consultaConCodigo(Codigo);
                         }
 
                         @Override
@@ -465,8 +480,8 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
                 
                 txt_Nombre.setVisible(false);
                 txt_Codigo.setVisible(false);
+                txt_Precio.setVisible(false);
                 txt_Costo.setVisible(false);
-                txt_Venta.setVisible(false);
                 
                 lbl_Nombre.setVisible(false);
                 lbl_Codigo.setVisible(false);
@@ -479,8 +494,8 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
                 
                 btn_Modificar.setVisible(false);
                 
+                txt_Precio.setBorder(UIManager.getBorder("TextField.border"));
                 txt_Costo.setBorder(UIManager.getBorder("TextField.border"));
-                txt_Venta.setBorder(UIManager.getBorder("TextField.border"));
                 txt_Codigo.setBorder(UIManager.getBorder("TextField.border"));
             }
         }
@@ -524,7 +539,7 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
         Control_Validacion controlvalidacion = new Control_Validacion();
         String Texto = txt_Codigo.getText();
 
-        boolean Error = controlvalidacion.TextFieldEntero(Texto);
+        boolean Error = controlvalidacion.validarEntradaEntera(Texto);
         if (Error == true)
         {
             LineBorder BordeError = new LineBorder(Color.RED);
@@ -540,49 +555,49 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
     }//GEN-LAST:event_txt_CodigoKeyReleased
 
     //Detecta errores de escritura
-    private void txt_VentaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_VentaKeyReleased
+    private void txt_CostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_CostoKeyReleased
         Control_Validacion controlvalidacion = new Control_Validacion();
-        String Texto = txt_Venta.getText();
+        String Texto = txt_Costo.getText();
 
-        boolean Error = controlvalidacion.TextFieldFloat(Texto);
+        boolean Error = controlvalidacion.validarEntradaFloat(Texto);
         if (Error == true)
         {
             LineBorder BordeError = new LineBorder(Color.RED);
-            txt_Venta.setBorder(BordeError);
+            txt_Costo.setBorder(BordeError);
             lbl_ErrorVenta.setVisible(true);
         }
 
         else
         {
-            txt_Venta.setBorder(UIManager.getBorder("TextField.border"));
+            txt_Costo.setBorder(UIManager.getBorder("TextField.border"));
             lbl_ErrorVenta.setVisible(false);
         }
-    }//GEN-LAST:event_txt_VentaKeyReleased
+    }//GEN-LAST:event_txt_CostoKeyReleased
 
     //Detecta errores de escritura
-    private void txt_CostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_CostoKeyReleased
+    private void txt_PrecioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_PrecioKeyReleased
         Control_Validacion controlvalidacion = new Control_Validacion();
-        String Texto = txt_Costo.getText();
+        String Texto = txt_Precio.getText();
 
-        boolean Error = controlvalidacion.TextFieldFloat(Texto);
+        boolean Error = controlvalidacion.validarEntradaFloat(Texto);
         if (Error == true)
         {
             LineBorder BordeError = new LineBorder(Color.RED);
-            txt_Costo.setBorder(BordeError);
+            txt_Precio.setBorder(BordeError);
             lbl_ErrorCosto.setVisible(true);
         }
 
         else
         {
-            txt_Costo.setBorder(UIManager.getBorder("TextField.border"));
+            txt_Precio.setBorder(UIManager.getBorder("TextField.border"));
             lbl_ErrorCosto.setVisible(false);
         }
-    }//GEN-LAST:event_txt_CostoKeyReleased
+    }//GEN-LAST:event_txt_PrecioKeyReleased
 
     //Ejecuta el codigo para la modificacion
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
-        Control_Sonidos controlsonido = new Control_Sonidos();
-        controlsonido.ReproducirError1();
+        Control_Sonido controlsonido = new Control_Sonido();
+        controlsonido.reproducirSonidoError1();
         
         int confirmacion = JOptionPane.showConfirmDialog(null, "¿Estás seguro de modificar el producto?", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
@@ -600,20 +615,20 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
                 producto.setID_Producto(Integer.parseInt(txt_Codigo.getText()));
                 producto.setNombre_Producto(txt_Nombre.getText());
                 producto.setCosto(Float.parseFloat(txt_Costo.getText()));
-                producto.setCostoVenta(Float.parseFloat(txt_Venta.getText()));
+                producto.setCostoVenta(Float.parseFloat(txt_Precio.getText()));
 
-                controlproducto.ModificarProducto(producto, ID);
+                controlproducto.modificarProducto(producto, ID);
 
                 //Codigo para limpiar los componentes
                 txt_Codigo.setText("");
                 txt_Nombre.setText("");
+                txt_Precio.setText("");
                 txt_Costo.setText("");
-                txt_Venta.setText("");
 
                 txt_Codigo.setVisible(false);
                 txt_Nombre.setVisible(false);
+                txt_Precio.setVisible(false);
                 txt_Costo.setVisible(false);
-                txt_Venta.setVisible(false);
 
                 lbl_Codigo.setVisible(false);
                 lbl_Nombre.setVisible(false);
@@ -630,7 +645,7 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
 
             catch (NumberFormatException e) 
             {
-                controlsonido.ReproducirError1();
+                controlsonido.reproducirSonidoError1();
                 JOptionPane.showMessageDialog(null, "Error, siga las instrucciones", "Error", JOptionPane.ERROR_MESSAGE);   
             }
         } 
@@ -658,8 +673,6 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
     private javax.swing.JButton btn_Cancelar;
     private javax.swing.JButton btn_Modificar;
     private javax.swing.JComboBox<String> cmb_Tipo;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbl_Busqueda;
     private javax.swing.JLabel lbl_Codigo;
@@ -668,13 +681,15 @@ public class Panel_Inventario_ModificarProducto extends javax.swing.JPanel
     private javax.swing.JLabel lbl_ErrorCosto;
     private javax.swing.JLabel lbl_ErrorVenta;
     private javax.swing.JLabel lbl_Nombre;
+    private javax.swing.JLabel lbl_Tipo;
     private javax.swing.JLabel lbl_Titulo;
     private javax.swing.JLabel lbl_Venta;
     private javax.swing.JList<String> lista_Resultados;
+    private javax.swing.JPanel panel_Modificar;
     private javax.swing.JTextField txt_Busqueda;
     private javax.swing.JTextField txt_Codigo;
     private javax.swing.JTextField txt_Costo;
     private javax.swing.JTextField txt_Nombre;
-    private javax.swing.JTextField txt_Venta;
+    private javax.swing.JTextField txt_Precio;
     // End of variables declaration//GEN-END:variables
 }

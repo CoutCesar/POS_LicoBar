@@ -1,11 +1,12 @@
 package Windows.Panels.MenuRecursosHumanos;
 
 import Controllers.Control_Configuracion;
-import Controllers.Control_Configuracion.Propiedades;
 import Controllers.Control_Empleado;
 import Models.ConfiguracionUsuario;
+import Models.Tema;
 import java.awt.Color;
 import javax.swing.SwingWorker;
+import javax.swing.plaf.ComboBoxUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -26,11 +27,17 @@ public class Panel_Inventario_ConsultarEmpleado extends javax.swing.JPanel {
     public void AplicarTema(ConfiguracionUsuario configuracionusuario)
     {
         Control_Configuracion controlconfiguracion = new Control_Configuracion();
-        int Tema = configuracionusuario.getTema();
+        Tema tema = new Tema();
+        
+        int IdTema = configuracionusuario.getTema();
+        tema = controlconfiguracion.cargarTema(IdTema);
 
-        Color Color1 = controlconfiguracion.ObtenerColor1(Tema);
-        Color Color2 = controlconfiguracion.ObtenerColor2(Tema);
-        Color Color3 = controlconfiguracion.ObtenerColor3(Tema);
+        Color Color1 = Color.decode(tema.getColor1());
+        Color Color2 = Color.decode(tema.getColor2());
+        Color Color3 = Color.decode(tema.getColor3());
+        Color Color4 = Color.decode(tema.getColor4());
+        Color Color5 = Color.decode(tema.getColor5());
+        
         Color arrowColor = Color3;
         Color selectedColor = Color2;
         
@@ -50,7 +57,8 @@ public class Panel_Inventario_ConsultarEmpleado extends javax.swing.JPanel {
         tabla_Busqueda.setBackground(Color2);
         txt_Busqueda.setBackground(Color2);
 
-        Propiedades customUI = new Propiedades(arrowColor, selectedColor);
+        //Propiedades customUI = new Propiedades(arrowColor, selectedColor);
+        ComboBoxUI customUI = controlconfiguracion.createCustomComboBoxUI(Color3, Color2);
         cmb_Tipo.setUI(customUI);
         
         tabla_Busqueda.setForeground(Color1);
@@ -66,7 +74,7 @@ public class Panel_Inventario_ConsultarEmpleado extends javax.swing.JPanel {
         Control_Empleado controlempleado = new Control_Empleado();
         DefaultTableModel model = new DefaultTableModel();
         
-        model = controlempleado.CargarEmpleados();
+        model = controlempleado.cargarEmpleados();
         tabla_Busqueda.setModel(model);
     }
     
@@ -186,7 +194,7 @@ public class Panel_Inventario_ConsultarEmpleado extends javax.swing.JPanel {
                     {
                         Control_Empleado controlempleado = new Control_Empleado();
                         DefaultTableModel model = new DefaultTableModel();
-                        return controlempleado.ConsultaID(ID);
+                        return controlempleado.busquedaConID(ID);
                     }
 
                     @Override
@@ -206,7 +214,7 @@ public class Panel_Inventario_ConsultarEmpleado extends javax.swing.JPanel {
             {
                 // Manejar la excepción de formato incorrecto aquí.
                 Control_Empleado controlempleado = new Control_Empleado();
-                tabla_Busqueda.setModel(controlempleado.CargarEmpleados());
+                tabla_Busqueda.setModel(controlempleado.cargarEmpleados());
             }
         } 
         
@@ -221,7 +229,7 @@ public class Panel_Inventario_ConsultarEmpleado extends javax.swing.JPanel {
                 {
                     Control_Empleado controlempleado = new Control_Empleado();
                     DefaultTableModel model = new DefaultTableModel();
-                    return controlempleado.ConsultaNombre(Nombre);
+                    return controlempleado.busquedaConNombre(Nombre);
                 }
 
                 @Override

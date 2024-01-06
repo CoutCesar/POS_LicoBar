@@ -2,16 +2,18 @@ package Windows.Panels.MenuRecursosHumanos;
 
 import Controllers.Control_Configuracion;
 import Controllers.Control_Empleado;
-import Controllers.Control_Sonidos;
+import Controllers.Control_Sonido;
 import Controllers.Control_Validacion;
 import Models.ConfiguracionUsuario;
 import Models.Empleado;
+import Models.Tema;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.ComboBoxUI;
 
 /**
  *
@@ -30,17 +32,21 @@ public class Panel_Inventario_RegistrarEmpleado extends javax.swing.JPanel {
     public void AplicarTema(ConfiguracionUsuario configuracionusuario)
     {
         Control_Configuracion controlconfiguracion = new Control_Configuracion();
-        int Tema = configuracionusuario.getTema();
+        Tema tema = new Tema();
+        
+        int IdTema = configuracionusuario.getTema();
+        tema = controlconfiguracion.cargarTema(IdTema);
 
-        Color Color1 = controlconfiguracion.ObtenerColor1(Tema);
-        Color Color2 = controlconfiguracion.ObtenerColor2(Tema);
-        Color Color3 = controlconfiguracion.ObtenerColor3(Tema);
-        Color Color4 = controlconfiguracion.ObtenerColor4(Tema);
+        Color Color1 = Color.decode(tema.getColor1());
+        Color Color2 = Color.decode(tema.getColor2());
+        Color Color3 = Color.decode(tema.getColor3());
+        Color Color4 = Color.decode(tema.getColor4());
+        Color Color5 = Color.decode(tema.getColor5());
+        
         Color arrowColor = Color3;
         Color selectedColor = Color2;
         
         this.setBackground(Color2);
-        
         jPanel1.setBackground(Color2);
         
         btn_Registrar.setBackground(Color3);
@@ -64,7 +70,8 @@ public class Panel_Inventario_RegistrarEmpleado extends javax.swing.JPanel {
         txt_Nombre.setForeground(Color1);
         
         Border border = BorderFactory.createLineBorder(Color.white, 1); // 2 es el grosor del borde
-        Control_Configuracion.Propiedades customUI = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
+        //Control_Configuracion.Propiedades customUI = new Control_Configuracion.Propiedades(arrowColor, selectedColor);
+        ComboBoxUI customUI = controlconfiguracion.createCustomComboBoxUI(Color3, Color2);
         cmb_Puesto.setUI(customUI);
         cmb_Puesto.setForeground(Color1);
         
@@ -312,7 +319,7 @@ public class Panel_Inventario_RegistrarEmpleado extends javax.swing.JPanel {
         Control_Validacion controlvalidacion = new Control_Validacion();
         String Texto = txt_Id.getText();
 
-        boolean Error = controlvalidacion.TextFieldFloat(Texto);
+        boolean Error = controlvalidacion.validarEntradaFloat(Texto);
         if (Error == true)
         {
             LineBorder BordeError = new LineBorder(Color.RED);
@@ -344,7 +351,7 @@ public class Panel_Inventario_RegistrarEmpleado extends javax.swing.JPanel {
             empleado.setContrasena(Contraseña);
 
             Control_Empleado controlempleado = new Control_Empleado();
-            controlempleado.NuevoEmpleado(empleado);
+            controlempleado.registrarEmpleado(empleado);
             
             txt_Nombre.setText("");
             txt_Id.setText("");
@@ -353,8 +360,8 @@ public class Panel_Inventario_RegistrarEmpleado extends javax.swing.JPanel {
         catch (NumberFormatException e) 
         {
             // Manejo de excepción si ocurre un error al convertir el ID a entero
-            Control_Sonidos controlsonido = new Control_Sonidos();
-            controlsonido.ReproducirError1();
+            Control_Sonido controlsonido = new Control_Sonido();
+            controlsonido.reproducirSonidoError1();
             JOptionPane.showMessageDialog(null, "Error, siga las instrucciones", "Error", JOptionPane.ERROR_MESSAGE);   
         }
     }//GEN-LAST:event_btn_RegistrarActionPerformed

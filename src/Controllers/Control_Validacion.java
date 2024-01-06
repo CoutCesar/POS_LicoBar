@@ -6,37 +6,41 @@ package Controllers;
  */
 public class Control_Validacion 
 {
-    public boolean TextFieldEntero(String Texto) 
+    public boolean validarEntradaEntera(String Texto) 
     {
         boolean Error = false;
 
-        for (char c : Texto.toCharArray()) {
-            if (!Character.isDigit(c)) {
+        for (char c : Texto.toCharArray()) 
+        {
+            if (!Character.isDigit(c)) 
+            {
                 Error = true;
                 break;
             }
         }
-
         return Error;
     }
     
     
-    public boolean TextFieldFloat(String Texto) 
+    public boolean validarEntradaFloat(String Texto) 
     {
         boolean Error = false;
         int puntos = 0;
 
-        for (char c : Texto.toCharArray()) {
-            if (!Character.isDigit(c)) {
-                if (c == '.' && puntos < 1) {
+        for (char c : Texto.toCharArray()) 
+        {
+            if (!Character.isDigit(c)) 
+            {
+                if (c == '.' && puntos < 1) 
+                {
                     puntos++;
-                } else {
+                } else 
+                {
                     Error = true;
                     break;
                 }
             }
         }
-
         return Error;
     }
 }

@@ -8,12 +8,12 @@ package Windows.Panels.MenuAdministracion;
  *
  * @author César Eduardo
  */
-public class Panel_Administracion_Ganancias extends javax.swing.JPanel {
+public class Panel_Administracion_Ventas extends javax.swing.JPanel {
 
     /**
-     * Creates new form Panel_Administracion_Ganancias
+     * Creates new form Panel_Administracion_Ventas
      */
-    public Panel_Administracion_Ganancias() {
+    public Panel_Administracion_Ventas() {
         initComponents();
     }
 

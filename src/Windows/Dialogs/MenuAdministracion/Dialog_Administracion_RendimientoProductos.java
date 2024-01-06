@@ -8,6 +8,6 @@ package Windows.Dialogs.MenuAdministracion;
  *
  * @author César Eduardo
  */
-public class Dialog_Administracion_Ventas {
+public class Dialog_Administracion_Ganancias {
     
 }
